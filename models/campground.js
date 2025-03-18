@@ -2,7 +2,6 @@ const mongoose=require('mongoose')
 const Review=require('./review')
 const Schema=mongoose.Schema;
 
-const opts = { toJSON: { virtuals: true } };
 const ImageSchema = new Schema({
     url: String,
     filename: String
@@ -11,6 +10,8 @@ const ImageSchema = new Schema({
 ImageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
+
+const opts = { toJSON: { virtuals: true } };
 const Campgroundschema=new Schema({
     title:String,
     images:[ImageSchema],

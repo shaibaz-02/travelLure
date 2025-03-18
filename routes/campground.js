@@ -18,12 +18,7 @@ router.get('/', catchAsync(async (req, res) => {
     const campgrounds = await Campground.find({});
     res.render('campgrounds/index', { campgrounds })
 }))
-
-router.get('/new',isLoggedIn,catchAsync((req, res) => {
-    res.render('campgrounds/new');
-}))
-
- router.post('/',upload.array('image'),validateCampground,catchAsync(async(req,res)=>{
+ router.post('/',isLoggedIn,upload.array('image'),validateCampground,catchAsync(async(req,res)=>{
     const geoData = await geocoder.forwardGeocode({
         query: req.body.campground.location,
         limit: 1
@@ -34,7 +29,11 @@ router.get('/new',isLoggedIn,catchAsync((req, res) => {
     campground.author=req.user._id;
     await campground.save()
     req.flash('success', 'Successfully made a new campground!');
-    res.redirect(`/campgrounds/${campground._id}`)
+    return res.redirect(`/campgrounds/${campground._id}`)
+}))
+  
+router.get('/new',isLoggedIn,catchAsync((req, res) => {
+    res.render('campgrounds/new');
 }))
 router.get('/:id',catchAsync(async (req,res)=>{
     const campground = await Campground.findById(req.params.id).populate({
